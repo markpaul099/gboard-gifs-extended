@@ -1,14 +1,13 @@
-group = "app.template"
+group = "app.markpaul099"
 
 patches {
-    // TODO: Update this section with your project details.
     about {
-        name = "UserXYZ Patches"
-        description = "Patches for apps I like"
-        source = "git@github.com:UserXYZ/morphe-patches.git"
-        author = "Awesome dev"
-        contact = "na"
-        website = "na"
+        name = "Gboard GIFs Extended"
+        description = "Google Images GIF search with SafeSearch settings, custom app name and package name for Gboard"
+        source = "git@github.com:markpaul099/gboard-gifs-extended.git"
+        author = "markpaul099"
+        contact = "https://github.com/markpaul099/gboard-gifs-extended/issues"
+        website = "https://github.com/markpaul099/gboard-gifs-extended"
         license = "GPLv3"
     }
 }
