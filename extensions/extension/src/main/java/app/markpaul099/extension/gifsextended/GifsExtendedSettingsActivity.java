@@ -9,6 +9,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -20,6 +22,7 @@ import android.widget.TextView;
  */
 @SuppressWarnings("unused")
 public final class GifsExtendedSettingsActivity extends Activity {
+    private static final String TITLE = "GIFs Extended";
 
     /** Toggles one setting and returns whether it was saved. */
     private interface Setter {
@@ -32,10 +35,10 @@ public final class GifsExtendedSettingsActivity extends Activity {
                 ? android.R.style.Theme_DeviceDefault_DayNight
                 : android.R.style.Theme_DeviceDefault_Light);
         super.onCreate(savedInstanceState);
-        setTitle("GIFs Extended");
-        if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Our own title bar: on Android 15+ Gboard is drawn edge to edge, and the window's
+        // action bar then covers the top of the content.
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setTitle(TITLE);
 
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
@@ -55,13 +58,45 @@ public final class GifsExtendedSettingsActivity extends Activity {
 
         ScrollView scroll = new ScrollView(this);
         scroll.addView(list);
-        setContentView(scroll);
+
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        // Keep clear of the status and navigation bars, edge to edge or not.
+        root.setFitsSystemWindows(true);
+        root.addView(titleBar());
+        root.addView(scroll, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        setContentView(root);
     }
 
-    @Override
-    public boolean onNavigateUp() {
-        finish();
-        return true;
+    private View titleBar() {
+        LinearLayout bar = new LinearLayout(this);
+        bar.setOrientation(LinearLayout.HORIZONTAL);
+        bar.setGravity(Gravity.CENTER_VERTICAL);
+        bar.setMinimumHeight(dp(64));
+        bar.setPadding(dp(4), 0, dp(16), 0);
+
+        ImageButton back = new ImageButton(this);
+        TypedArray values = obtainStyledAttributes(new int[]{
+                android.R.attr.homeAsUpIndicator, android.R.attr.selectableItemBackgroundBorderless});
+        try {
+            back.setImageDrawable(values.getDrawable(0));
+            back.setBackground(values.getDrawable(1));
+        } finally {
+            values.recycle();
+        }
+        back.setColorFilter(themeColor(android.R.attr.textColorPrimary));
+        back.setContentDescription("Navigate up");
+        back.setOnClickListener(view -> finish());
+        bar.addView(back, new LinearLayout.LayoutParams(dp(48), dp(48)));
+
+        TextView title = new TextView(this);
+        title.setText(TITLE);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        title.setTextColor(themeColor(android.R.attr.textColorPrimary));
+        title.setPadding(dp(12), 0, 0, 0);
+        bar.addView(title);
+        return bar;
     }
 
     private TextView header(String text) {
