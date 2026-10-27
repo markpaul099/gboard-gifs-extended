@@ -1,3 +1,9 @@
+## [1.0.0-dev.2](https://github.com/markpaul099/gboard-gifs-extended/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-10-27)
+
+### 🐛 Bug Fixes
+
+* Keep the GIFs Extended screen clear of the title bar ([fedfff5](https://github.com/markpaul099/gboard-gifs-extended/commit/fedfff5a134fdbcdb0045d9284b0ce24ff2b3552))
+
 ## 1.0.0-dev.1 (2026-10-27)
 
 ### ✨ New Features
